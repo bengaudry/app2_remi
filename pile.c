@@ -33,7 +33,6 @@ void liberer_pile(pile_val *p) {
         cel = cel->suivant;
         free(cel_p);
     }
-    free(p);
 }
 
 //echange entre eux les 2 elements en sommet de pile
@@ -79,18 +78,22 @@ int exec_groupe_commandes(val *cmd1, val *cmd2, val valeur, bool debug) {
     int ret;
     if (valeur.v_int == 0) {
         liberer_seq_cmd(&(cmd2->groupe));
-        printf("\n\nExecution du sous programme:\n");
+        if (!silent_mode)
+            printf("\n\nExecution du sous programme:\n");
         ret = interprete(&(cmd1->groupe), debug);
     }
     else {
         liberer_seq_cmd(&(cmd1->groupe));
-        printf("\n\nExecution du sous programme:\n");
+        if (!silent_mode)
+            printf("\n\nExecution du sous programme:\n");
         ret = interprete(&(cmd2->groupe), debug);
     }
     return ret;
 }
 
 void afficher_pile(pile_val *p) {
+    if (silent_mode) return;
+
     cellule_val *cel = p->tete;
     val valeur;
     while (cel != NULL) {

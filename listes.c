@@ -75,6 +75,7 @@ void ajout_en_queue(sequence_t *seq, char c) {
 }
 
 void afficher (sequence_t* seq) {
+    if (silent_mode) return;
     assert (seq); /* Le pointeur doit être valide */
 
     cellule_t *cel = seq->tete;

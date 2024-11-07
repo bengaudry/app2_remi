@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <ctype.h>
 #ifdef NCURSES
 #include <ncurses.h>
 #endif
@@ -79,20 +80,20 @@ int interprete (sequence_t* seq, bool debug)
             case 'D':
                 droite();
                 break;
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-                valeur.v_bool = 1;
-                valeur.v_int = commande-'0';
-                empiler(&p, valeur);
-                break;
+            // case '0':
+            // case '1':
+            // case '2':
+            // case '3':
+            // case '4':
+            // case '5':
+            // case '6':
+            // case '7':
+            // case '8':
+            // case '9':
+            //     valeur.v_bool = 1;
+            //     valeur.v_int = commande-'0';
+            //     empiler(&p, valeur);
+            //     break;
             case '+':
                 x = depiler(&p);
                 y = depiler(&p);
@@ -187,8 +188,14 @@ int interprete (sequence_t* seq, bool debug)
                 rotation(&p, y.v_int, x.v_int);
                 break;
             default:
+                if (isdigit(commande)) {
+                    valeur.v_bool = 1;
+                    valeur.v_int = commande-'0';
+                    empiler(&p, valeur);
+                }
                 if (!silent_mode)
                     eprintf("Caractère inconnu: '%c'\n", commande);
+                break;
         }
         cel = cel->suivant;
 
