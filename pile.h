@@ -8,7 +8,7 @@ struct valeur {
     int v_bool; //vaut 0 si groupe de commandes
                 //vaut 1 si int
     int v_int;
-    sequence_t gp; //gp pour groupe de commandes
+    sequence_t groupe; //gp pour groupe de commandes
 };
 typedef struct valeur val;
 
@@ -33,6 +33,8 @@ void empiler(pile_val *p, val valeur);
 //dépile et renvoie l'element au sommet
 val depiler(pile_val *p);
 
+void liberer_pile(pile_val *p);
+
 //echange les 2 elements au sommet entre eux
 void echanger(pile_val *p);
 
@@ -46,7 +48,7 @@ void deplacer(pile_val *p, int n);
 void rotation(pile_val *p, int n, int x);
 
 //execute un groupe de commandes
-int exec_groupe_commandes(val cmd1, val cmd2, val valeur, bool debug);
+int exec_groupe_commandes(val *cmd1, val *cmd2, val valeur, bool debug);
 
 void afficher_pile(pile_val *p);
 

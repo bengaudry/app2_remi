@@ -12,12 +12,28 @@ void empiler (pile_val *p, val valeur) {
     cel->valeur = valeur;
     cel->suivant = p->tete;
     p->tete = cel;
-}   
+}
 
 val depiler(pile_val *p) {
+    cellule_val *ancienne_tete;
+
+    ancienne_tete = p->tete;
     val valeur = p->tete->valeur;
     p->tete = p->tete->suivant;
+    free(ancienne_tete);
     return valeur;
+}
+
+void liberer_pile(pile_val *p) {
+    cellule_val *cel, *cel_p;
+
+    cel = p->tete;
+    while (cel != NULL) {
+        cel_p = cel;
+        cel = cel->suivant;
+        free(cel_p);
+    }
+    free(p);
 }
 
 //echange entre eux les 2 elements en sommet de pile
@@ -59,19 +75,20 @@ void rotation(pile_val *p, int n, int x) {
     }
 }
 
-int exec_groupe_commandes(val cmd1, val cmd2, val valeur, bool debug) {
+int exec_groupe_commandes(val *cmd1, val *cmd2, val valeur, bool debug) {
     int ret;
     if (valeur.v_int == 0) {
+        liberer_seq_cmd(&(cmd2->groupe));
         printf("\n\nExecution du sous programme:\n");
-        ret = interprete(&cmd1.gp, debug);
+        ret = interprete(&(cmd1->groupe), debug);
     }
     else {
+        liberer_seq_cmd(&(cmd1->groupe));
         printf("\n\nExecution du sous programme:\n");
-        ret = interprete(&cmd2.gp, debug);
+        ret = interprete(&(cmd2->groupe), debug);
     }
     return ret;
 }
-
 
 void afficher_pile(pile_val *p) {
     cellule_val *cel = p->tete;
@@ -83,15 +100,9 @@ void afficher_pile(pile_val *p) {
         }
         else {
             printf("{");
-            afficher(&valeur.gp);
+            afficher(&valeur.groupe);
             printf("}\n");
         }
         cel = cel->suivant;
     }
 }
-
-
-
-
-
-

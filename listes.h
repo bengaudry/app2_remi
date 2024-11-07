@@ -42,6 +42,8 @@ typedef struct sequence sequence_t;
 
 cellule_t* nouvelleCellule (void);
 
+void liberer_seq_cmd (sequence_t *seq);
+
 void detruireCellule (cellule_t*);
 
 void conversion (char *texte, sequence_t *seq);
