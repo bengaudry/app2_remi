@@ -6,7 +6,8 @@
 #include "interprete.h"
 
 
-void empiler (pile_val *p, val valeur) {
+/* Ajout d'un élément en haut de la pile */
+void empiler (pile *p, val valeur) {
     cellule_val *cel = malloc(sizeof(cellule_val));
 
     cel->valeur = valeur;
@@ -14,17 +15,23 @@ void empiler (pile_val *p, val valeur) {
     p->tete = cel;
 }
 
-val depiler(pile_val *p) {
+
+/* Dépile et renvoie l'element au sommet */
+val depiler(pile *p) {
+    val valeur;
     cellule_val *ancienne_tete;
 
     ancienne_tete = p->tete;
-    val valeur = p->tete->valeur;
+    valeur = p->tete->valeur;
     p->tete = p->tete->suivant;
+    
     free(ancienne_tete);
     return valeur;
 }
 
-void liberer_pile(pile_val *p) {
+
+/* Libère la mémoire allouée à chaque cellule de la pile, et à la pile elle même*/
+void liberer_pile(pile *p) {
     cellule_val *cel = p->tete;
     while (cel != NULL) {
         cellule_val *cel_p = cel;
@@ -37,8 +44,9 @@ void liberer_pile(pile_val *p) {
     p->tete = NULL; // Réinitialise la tête pour éviter un pointeur invalide
 }
 
-//echange entre eux les 2 elements en sommet de pile
-void echanger(pile_val *p) {
+
+/* Echange les 2 elements au sommet entre eux */
+void echanger(pile *p) {
     cellule_val *tete = p->tete;
     cellule_val *suiv = tete->suivant;
     
@@ -47,7 +55,9 @@ void echanger(pile_val *p) {
     p->tete = suiv;
 }
 
-void cloner(pile_val *p) {
+
+/* Clone l'element au sommet de la pile */
+void cloner(pile *p) {
     cellule_val *cel = malloc(sizeof(cellule_val));
 
     if (p == NULL) return;
@@ -57,11 +67,13 @@ void cloner(pile_val *p) {
     p->tete = cel;      
 }
 
-void deplacer(pile_val *p, int n) {
+
+/* Deplace l'element d'indice n au sommet */
+void deplacer(pile *p, int n) {
     cellule_val *cel = p->tete;
     cellule_val *cel_pre = p->tete;
     
-    for (int i=2; i<n; i++) {
+    for (int i = 2; i < n; i++) {
         cel_pre = cel_pre->suivant;
     }
     cel = cel_pre->suivant;
@@ -70,12 +82,19 @@ void deplacer(pile_val *p, int n) {
     cel_pre->suivant = cel->suivant;
 }
 
-void rotation(pile_val *p, int n, int x) {
-    for (int i=1; i<=x; i++) {
+
+/* Effectue x rotations des n premiers elements */
+void rotation(pile *p, int n, int x) {
+    for (int i = 1; i <= x; i++) {
         deplacer(p, n);
     }
 }
 
+
+/* 
+ * Execute un groupe de commandes selon une certaine valeur n : 
+ * n V F ? exécute V si n != 0 sinon exécute F
+ */
 int exec_groupe_commandes(val *V, val *F, val valeur, bool debug) {
     int n, ret;
 
@@ -97,7 +116,9 @@ int exec_groupe_commandes(val *V, val *F, val valeur, bool debug) {
     return ret;
 }
 
-void afficher_pile(pile_val *p) {
+
+/* Affiche les éléments de la pile */
+void afficher_pile(pile *p) {
     if (silent_mode) return;
 
     cellule_val *cel = p->tete;

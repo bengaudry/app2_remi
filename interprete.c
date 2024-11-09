@@ -20,7 +20,7 @@
 
 //init de la pile en dehors de la fonction
 //pour ne pas la perdre au cours de l'execution
-pile_val p;
+pile p;
 int profondeur_interprete = 0;
 //p.tete = NULL;
 
