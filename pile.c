@@ -8,7 +8,7 @@
 
 /* Ajout d'un élément en haut de la pile */
 void empiler (pile *p, val valeur) {
-    cellule_val *cel = malloc(sizeof(cellule_val));
+    cellule_pile *cel = malloc(sizeof(cellule_pile));
 
     cel->valeur = valeur;
     cel->suivant = p->tete;
@@ -19,7 +19,7 @@ void empiler (pile *p, val valeur) {
 /* Dépile et renvoie l'element au sommet */
 val depiler(pile *p) {
     val valeur;
-    cellule_val *ancienne_tete;
+    cellule_pile *ancienne_tete;
 
     ancienne_tete = p->tete;
     valeur = p->tete->valeur;
@@ -32,9 +32,9 @@ val depiler(pile *p) {
 
 /* Libère la mémoire allouée à chaque cellule de la pile, et à la pile elle même*/
 void liberer_pile(pile *p) {
-    cellule_val *cel = p->tete;
+    cellule_pile *cel = p->tete;
     while (cel != NULL) {
-        cellule_val *cel_p = cel;
+        cellule_pile *cel_p = cel;
         if (!cel->valeur.v_bool) { 
             liberer_seq_cmd(&cel->valeur.groupe); // Libère les groupes de commandes
         }
@@ -47,8 +47,8 @@ void liberer_pile(pile *p) {
 
 /* Echange les 2 elements au sommet entre eux */
 void echanger(pile *p) {
-    cellule_val *tete = p->tete;
-    cellule_val *suiv = tete->suivant;
+    cellule_pile *tete = p->tete;
+    cellule_pile *suiv = tete->suivant;
     
     tete->suivant = suiv->suivant;
     suiv->suivant = tete;
@@ -58,7 +58,7 @@ void echanger(pile *p) {
 
 /* Clone l'element au sommet de la pile */
 void cloner(pile *p) {
-    cellule_val *cel = malloc(sizeof(cellule_val));
+    cellule_pile *cel = malloc(sizeof(cellule_pile));
 
     if (p == NULL) return;
 
@@ -70,8 +70,8 @@ void cloner(pile *p) {
 
 /* Deplace l'element d'indice n au sommet */
 void deplacer(pile *p, int n) {
-    cellule_val *cel = p->tete;
-    cellule_val *cel_pre = p->tete;
+    cellule_pile *cel = p->tete;
+    cellule_pile *cel_pre = p->tete;
     
     for (int i = 2; i < n; i++) {
         cel_pre = cel_pre->suivant;
@@ -121,7 +121,7 @@ int exec_groupe_commandes(val *V, val *F, val valeur, bool debug) {
 void afficher_pile(pile *p) {
     if (silent_mode) return;
 
-    cellule_val *cel = p->tete;
+    cellule_pile *cel = p->tete;
     val valeur;
     while (cel != NULL) {
         valeur = cel->valeur;

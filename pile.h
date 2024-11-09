@@ -19,11 +19,11 @@ typedef struct valeur {
 typedef struct cel {
     val valeur;
     struct cel *suivant;
-} cellule_val;
+} cellule_pile;
 
 // Type de la pile
 typedef struct {
-    cellule_val *tete;
+    cellule_pile *tete;
 } pile;
 
 

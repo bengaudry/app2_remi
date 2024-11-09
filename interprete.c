@@ -129,21 +129,20 @@ int interprete (sequence_t* seq, bool debug)
                 break;
             case '!':
                 x = depiler(&p);
-                if (!silent_mode)
-                    printf("\n\nExecution du sous programme:\n");
                 if (interprete(&x.groupe, debug) == VICTOIRE) {
                     profondeur_interprete--;
-                    if (profondeur_interprete <= 0) liberer_seq_cmd(seq);
+                    if (profondeur_interprete <= 0) {
+                        liberer_seq_cmd(&x.groupe);
+                        liberer_seq_cmd(seq);
+                    }
                     return VICTOIRE;
-                }    
+                }
                 break;
             case 'X':
                 echanger(&p);
                 break;
             case 'B':
                 while (p.tete->valeur.v_int > 0) {
-                    if (!silent_mode)
-                        printf("\n\nExecution du sous programme:\n");
                     if (interprete(&p.tete->suivant->valeur.groupe, debug) == VICTOIRE) {
                         profondeur_interprete--;
                         if (profondeur_interprete <= 0) liberer_seq_cmd(seq);
@@ -151,7 +150,8 @@ int interprete (sequence_t* seq, bool debug)
                     }
                     p.tete->valeur.v_int--;
                 }
-                p.tete->suivant = p.tete->suivant->suivant;
+                liberer_seq_cmd(&p.tete->suivant->valeur.groupe);
+                depiler(&p); // Supprimer le groupe après utilisation
                 break;
             case 'C':
                 cloner(&p);
