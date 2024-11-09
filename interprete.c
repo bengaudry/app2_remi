@@ -10,19 +10,14 @@
 #include "curiosity.h"
 #include "pile.h"
 
-
-/*
- *  Auteur(s) :
- *  Date :
- *  Suivi des Modifications :
- *
- */
-
-//init de la pile en dehors de la fonction
-//pour ne pas la perdre au cours de l'execution
+// On initialise la pile en dehors de la fonction
+// pour ne pas la perdre au cours de l'execution
 pile p;
+
+// On définit une variable pour compter la profondeur
+// de l'interprete car c'est une fonction récursive
 int profondeur_interprete = 0;
-//p.tete = NULL;
+
 
 void stop (void)
 {
@@ -33,15 +28,13 @@ void stop (void)
 }
 
 
-
+/* Exécute chaque commande de la séquence */
 int interprete (sequence_t* seq, bool debug)
 {
     profondeur_interprete++;
     cellule_t *cel;
     char commande;
-    int ret;         //utilisée pour les valeurs de retour
-
-    debug = true;
+    int ret;                // Utilisée pour les valeurs de retour
 
     if (!silent_mode) {
         printf ("Programme:");
@@ -51,7 +44,7 @@ int interprete (sequence_t* seq, bool debug)
     }
 
     cel = seq->tete;
-    while (cel != NULL) { //à modifier: condition de boucle
+    while (cel != NULL) {
         val valeur;
         val x, y;
         sequence_t gp;
@@ -62,16 +55,14 @@ int interprete (sequence_t* seq, bool debug)
             case 'A':
                 ret = avance();
                 if (ret == VICTOIRE) {
-                    //liberer_pile(&p);
                     profondeur_interprete--;
                     if (profondeur_interprete <= 0) liberer_seq_cmd(seq);
                     return VICTOIRE; /* on a atteint la cible */
                 }
                 if (ret == RATE) {
-                    //liberer_pile(&p);
                     profondeur_interprete--;
                     if (profondeur_interprete <= 0) liberer_seq_cmd(seq);
-                    return RATE; /* tombé dans l'eau ou sur un rocher */
+                    return RATE;     /* tombé dans l'eau ou sur un rocher */
                 }
                 break;
             case 'G':
