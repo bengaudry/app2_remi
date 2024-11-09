@@ -27,7 +27,7 @@ extern bool silent_mode;
 
 
 
-
+////// DEFINITION DES TYPES DE SEQUENCES CHAINEES ///////
 struct cellule {
     char   command;
     /* vous pouvez rajouter d'autres champs ici */
@@ -40,16 +40,27 @@ struct sequence {
 };
 typedef struct sequence sequence_t;
 
+
+
+
+////// FONCTIONS SUR LES SEQUENCES DE COMMANDES CHAINEES ///////
+
+/* Crée une cellule de séquence de commandes */
 cellule_t* nouvelleCellule (void);
 
-void liberer_seq_cmd (sequence_t *seq);
-
-void detruireCellule (cellule_t*);
-
+/* Convertit une chaine de caractères en séquence de commandes chainée */
 void conversion (char *texte, sequence_t *seq);
 
+/* Libère la mémoire attribuée à une cellule */
+void detruireCellule (cellule_t*);
+
+/* Libére une séquences de commandes et chaque cellule qu'elle contient */
+void liberer_seq_cmd (sequence_t *seq);
+
+/* Ajoute une cellule en fin de séquence */
 void ajout_en_queue(sequence_t *seq, char c);
 
+/* Affiche une séquence de commandes */
 void afficher (sequence_t* seq);
 
 
