@@ -8,10 +8,6 @@
 #include "listes.h"
 
 
-/*
- *  Auteur(s) : Rémi Cortial, Ben Gaudry
- */
-
 bool silent_mode = false;
 
 
