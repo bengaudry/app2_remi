@@ -25,14 +25,16 @@ val depiler(pile_val *p) {
 }
 
 void liberer_pile(pile_val *p) {
-    cellule_val *cel, *cel_p;
-
-    cel = p->tete;
+    cellule_val *cel = p->tete;
     while (cel != NULL) {
-        cel_p = cel;
+        cellule_val *cel_p = cel;
+        if (!cel->valeur.v_bool) { 
+            liberer_seq_cmd(&cel->valeur.groupe); // Libère les groupes de commandes
+        }
         cel = cel->suivant;
         free(cel_p);
     }
+    p->tete = NULL; // Réinitialise la tête pour éviter un pointeur invalide
 }
 
 //echange entre eux les 2 elements en sommet de pile
@@ -74,19 +76,23 @@ void rotation(pile_val *p, int n, int x) {
     }
 }
 
-int exec_groupe_commandes(val *cmd1, val *cmd2, val valeur, bool debug) {
-    int ret;
+int exec_groupe_commandes(val *V, val *F, val valeur, bool debug) {
+    int n, ret;
+
+    n = valeur.v_int;
     if (valeur.v_int == 0) {
-        liberer_seq_cmd(&(cmd2->groupe));
+        liberer_seq_cmd(&(F->groupe));
         if (!silent_mode)
             printf("\n\nExecution du sous programme:\n");
-        ret = interprete(&(cmd1->groupe), debug);
+        ret = interprete(&(V->groupe), debug);
+        liberer_seq_cmd(&(V->groupe));
     }
     else {
-        liberer_seq_cmd(&(cmd1->groupe));
+        liberer_seq_cmd(&(V->groupe));
         if (!silent_mode)
             printf("\n\nExecution du sous programme:\n");
-        ret = interprete(&(cmd2->groupe), debug);
+        ret = interprete(&(F->groupe), debug);
+        liberer_seq_cmd(&(F->groupe));
     }
     return ret;
 }
