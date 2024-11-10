@@ -86,7 +86,7 @@ void liberer_pile(pile *p) {
     cellule_pile *cel = p->tete;
     while (cel != NULL) {
         cellule_pile *cel_p = cel;
-        if (!cel->valeur.v_bool) { 
+        if (!cel->valeur.est_int) { 
             liberer_seq_cmd(&cel->valeur.groupe); // Libère les groupes de commandes
         }
         cel = cel->suivant;
@@ -182,7 +182,7 @@ int exec_groupe_commandes(val *V, val *F, val *valeur, bool debug) {
 void afficher_valeur_cellule(val valeur) {
     if (silent_mode) return;
 
-    if (valeur.v_bool == 1) {
+    if (valeur.est_int == 1) {
         printf("%d\n", valeur.v_int);
     }
     else {

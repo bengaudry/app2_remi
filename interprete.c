@@ -84,21 +84,21 @@ int interprete (sequence_t* seq, bool debug)
             case '+':
                 x = depiler(&p);
                 y = depiler(&p);
-                valeur.v_bool = 1;
+                valeur.est_int = 1;
                 valeur.v_int = x.v_int + y.v_int;
                 empiler(&p, valeur);
                 break;
             case '-':
                 x = depiler(&p);
                 y = depiler(&p);
-                valeur.v_bool = 1;
+                valeur.est_int = 1;
                 valeur.v_int = y.v_int - x.v_int;
                 empiler(&p, valeur);
                 break;
             case '*':
                 x = depiler(&p);
                 y = depiler(&p);
-                valeur.v_bool = 1;
+                valeur.est_int = 1;
                 valeur.v_int = x.v_int * y.v_int;
                 empiler(&p, valeur);
                 break;
@@ -108,7 +108,7 @@ int interprete (sequence_t* seq, bool debug)
                 break;
             case 'M':
                 x = depiler(&p);
-                valeur.v_bool = 1;
+                valeur.est_int = 1;
                 valeur.v_int = mesure(x.v_int);
                 empiler(&p, valeur);
                 break;
@@ -119,10 +119,11 @@ int interprete (sequence_t* seq, bool debug)
                 while (cel->command != '}' || nb_o-nb_c != 1) {
                     if (cel->command == '{') nb_o++;
                     if (cel->command == '}') nb_c++;
-                    ajout_en_queue(&gp, cel->command);
+                    ajout_en_tete(&gp, cel->command);
                     cel = cel->suivant;
                 } 
-                valeur.v_bool = 0;
+                inverser_seq(&gp);
+                valeur.est_int = 0;
                 valeur.groupe = gp;
                 empiler(&p, valeur);
                 break;
@@ -176,11 +177,12 @@ int interprete (sequence_t* seq, bool debug)
                 etat_z = !etat_z;
 
                 if (!etat_z) {
-                    // Si false, on execute ? avec les éléments en fin de pile
+                    // Si false, on dépile les éléments en fin de pile
                     x = depiler_fin(&p);
                     y = depiler_fin(&p);
                     valeur = depiler_fin(&p);
 
+                    // et on les empile au début
                     empiler(&p, valeur);
                     empiler(&p, y);
                     empiler(&p, x);
@@ -188,7 +190,7 @@ int interprete (sequence_t* seq, bool debug)
                 break;
             default:
                 if (isdigit(commande)) {
-                    valeur.v_bool = 1;
+                    valeur.est_int = 1;
                     valeur.v_int = commande-'0';
                     empiler(&p, valeur);
                 } else {

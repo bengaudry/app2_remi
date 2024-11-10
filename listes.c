@@ -63,6 +63,16 @@ void liberer_seq_cmd (sequence_t *seq) {
 }
 
 
+/* Ajoute une cellule en tete de séquence */
+void ajout_en_tete(sequence_t *seq, char c) {
+    cellule_t *cel;
+    
+    cel = nouvelleCellule();
+    cel->command = c;
+    cel->suivant = seq->tete;
+    seq->tete = cel;
+}
+
 /* Ajoute une cellule en fin de séquence */
 void ajout_en_queue(sequence_t *seq, char c) {
     cellule_t *cel, *cel_t;
@@ -85,6 +95,22 @@ void ajout_en_queue(sequence_t *seq, char c) {
     cel_t->suivant = cel;
 }
 
+
+void inverser_seq(sequence_t *seq) {
+    cellule_t *precedent = NULL;
+    cellule_t *courant = seq->tete;
+    cellule_t *suivant = NULL;
+
+    while (courant != NULL) {
+        suivant = courant->suivant;
+        courant->suivant = precedent;
+
+        precedent = courant;
+        courant = suivant;
+    }
+
+    seq->tete = precedent;
+}
 
 /* Affiche une séquence de commandes */
 void afficher (sequence_t* seq) {

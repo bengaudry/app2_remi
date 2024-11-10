@@ -54,11 +54,17 @@ void conversion (char *texte, sequence_t *seq);
 /* Libère la mémoire attribuée à une cellule */
 void detruireCellule (cellule_t*);
 
+
 /* Libére une séquences de commandes et chaque cellule qu'elle contient */
 void liberer_seq_cmd (sequence_t *seq);
 
+/* Ajoute une cellule en tete de séquence */
+void ajout_en_tete(sequence_t *seq, char c);
+
 /* Ajoute une cellule en fin de séquence */
 void ajout_en_queue(sequence_t *seq, char c);
+
+void inverser_seq(sequence_t *seq);
 
 /* Affiche une séquence de commandes */
 void afficher (sequence_t* seq);

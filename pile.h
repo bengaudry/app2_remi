@@ -8,10 +8,10 @@
 
 // Valeur d'une cellule de pile
 typedef struct valeur {
-    int v_bool; //vaut 0 si groupe de commandes
-                //vaut 1 si int
+    int est_int;    //vaut 0 si groupe de commandes
+                    //vaut 1 si int
     int v_int;
-    sequence_t groupe; //gp pour groupe de commandes
+    sequence_t groupe; // groupe de commandes imbriqué
 } val;
 
 
