@@ -28,6 +28,16 @@ void stop (void)
 }
 
 
+/* Libère la mémoire allouée avant de terminer l'interprète */
+void nettoyer_interprete(sequence_t *seq, pile *p) {
+    profondeur_interprete--;
+    if (profondeur_interprete <= 0) {
+        liberer_seq_cmd(seq);
+        liberer_pile(p);
+    }
+}
+
+
 /* Exécute chaque commande de la séquence */
 int interprete (sequence_t* seq, bool debug)
 {
@@ -57,13 +67,11 @@ int interprete (sequence_t* seq, bool debug)
             case 'A':
                 ret = avance();
                 if (ret == VICTOIRE) {
-                    profondeur_interprete--;
-                    if (profondeur_interprete <= 0) liberer_seq_cmd(seq);
+                    nettoyer_interprete(seq, &p);
                     return VICTOIRE; /* on a atteint la cible */
                 }
                 if (ret == RATE) {
-                    profondeur_interprete--;
-                    if (profondeur_interprete <= 0) liberer_seq_cmd(seq);
+                    nettoyer_interprete(seq, &p);
                     return RATE;     /* tombé dans l'eau ou sur un rocher */
                 }
                 break;
@@ -122,10 +130,9 @@ int interprete (sequence_t* seq, bool debug)
                 x = depiler(&p);
                 y = depiler(&p);
                 valeur = depiler(&p);
-                ret = exec_groupe_commandes(&x, &y, valeur, debug);
+                ret = exec_groupe_commandes(&x, &y, &valeur, debug);
                 if (ret == VICTOIRE) {
-                    profondeur_interprete--;
-                    if (profondeur_interprete <= 0) liberer_seq_cmd(seq);
+                    nettoyer_interprete(seq, &p);
                     return VICTOIRE;
                 };
                 break;
@@ -134,8 +141,8 @@ int interprete (sequence_t* seq, bool debug)
                 if (interprete(&x.groupe, debug) == VICTOIRE) {
                     profondeur_interprete--;
                     if (profondeur_interprete <= 0) {
-                        liberer_seq_cmd(&x.groupe);
                         liberer_seq_cmd(seq);
+                        liberer_seq_cmd(&x.groupe);
                     }
                     return VICTOIRE;
                 }
@@ -146,13 +153,11 @@ int interprete (sequence_t* seq, bool debug)
             case 'B':
                 while (p.tete->valeur.v_int > 0) {
                     if (interprete(&p.tete->suivant->valeur.groupe, debug) == VICTOIRE) {
-                        profondeur_interprete--;
-                        if (profondeur_interprete <= 0) liberer_seq_cmd(seq);
+                        nettoyer_interprete(seq, &p);
                         return VICTOIRE;
                     }
                     p.tete->valeur.v_int--;
                 }
-                liberer_seq_cmd(&p.tete->suivant->valeur.groupe);
                 depiler(&p); // Supprimer le groupe après utilisation
                 break;
             case 'C':
@@ -207,7 +212,6 @@ int interprete (sequence_t* seq, bool debug)
 
     /* Si on sort de la boucle sans arriver sur la cible,
      * c'est raté :-( */
-    profondeur_interprete--;
-    if (profondeur_interprete <= 0) liberer_seq_cmd(seq);
+    nettoyer_interprete(seq, &p);
     return CIBLERATEE;
 }

@@ -59,6 +59,7 @@ void liberer_seq_cmd (sequence_t *seq) {
         cel = cel->suivant;
         detruireCellule(cel_p);
     }
+    detruireCellule(cel);
 }
 
 

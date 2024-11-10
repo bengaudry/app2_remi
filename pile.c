@@ -122,15 +122,27 @@ void cloner(pile *p) {
 /* Deplace l'element d'indice n au sommet */
 void deplacer(pile *p, int n) {
     cellule_pile *cel = p->tete;
-    cellule_pile *cel_pre = p->tete;
-    
-    for (int i = 2; i < n; i++) {
-        cel_pre = cel_pre->suivant;
-    }
-    cel = cel_pre->suivant;
+    cellule_pile *cel_pre = NULL;
 
-    empiler(p, cel->valeur);
-    cel_pre->suivant = cel->suivant;
+    if (n == 1 || p->tete == NULL) return; // Aucun déplacement nécessaire
+
+    // Parcourt jusqu’à l'élément n
+    for (int i = 1; i < n - 1 && cel->suivant != NULL; i++) {
+        cel = cel->suivant;
+    }
+
+    // Pointe sur l’élément à déplacer
+    cel_pre = cel;
+    cellule_pile *a_deplacer = cel_pre->suivant;
+
+    if (a_deplacer == NULL) return; // Rien à déplacer
+
+    // Retire a_deplacer de sa position et l'empile
+    cel_pre->suivant = a_deplacer->suivant;
+    empiler(p, a_deplacer->valeur);
+
+    // Libère l'ancienne cellule maintenant déplacée au sommet
+    free(a_deplacer);
 }
 
 
@@ -146,24 +158,22 @@ void rotation(pile *p, int n, int x) {
  * Execute un groupe de commandes selon une certaine valeur n : 
  * n V F ? exécute V si n != 0 sinon exécute F
  */
-int exec_groupe_commandes(val *V, val *F, val valeur, bool debug) {
+int exec_groupe_commandes(val *V, val *F, val *valeur, bool debug) {
     int n, ret;
 
-    n = valeur.v_int;
-    if (valeur.v_int == 0) {
-        liberer_seq_cmd(&(F->groupe));
+    n = valeur->v_int;
+    if (valeur->v_int == 0) {
         if (!silent_mode)
             printf("\n\nExecution du sous programme:\n");
         ret = interprete(&(V->groupe), debug);
-        liberer_seq_cmd(&(V->groupe));
     }
     else {
-        liberer_seq_cmd(&(V->groupe));
         if (!silent_mode)
             printf("\n\nExecution du sous programme:\n");
         ret = interprete(&(F->groupe), debug);
-        liberer_seq_cmd(&(F->groupe));
     }
+    liberer_seq_cmd(&(F->groupe));
+    liberer_seq_cmd(&(V->groupe));
     return ret;
 }
 

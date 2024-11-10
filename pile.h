@@ -60,7 +60,7 @@ void deplacer(pile *p, int n);
 void rotation(pile *p, int n, int x);
 
 /* Execute un groupe de commandes */
-int exec_groupe_commandes(val *cmd1, val *cmd2, val valeur, bool debug);
+int exec_groupe_commandes(val *cmd1, val *cmd2, val *valeur, bool debug);
 
 /* Affiche la valeur d'une cellule de la pile */
 void afficher_valeur_cellule(val valeur);
