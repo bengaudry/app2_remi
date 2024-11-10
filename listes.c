@@ -29,13 +29,15 @@ void conversion (char *texte, sequence_t *seq)
     cel = seq->tete;
     cel->command = texte[0];
     for (i = 1; texte[i] != '\0'; i++) {
-        // Pour chaque caractère dans le texte on crée une cellule et on l'ajoute dans la sequence
-        suiv = nouvelleCellule();
-        suiv->command = texte[i];
-        suiv->suivant = NULL;
+        if (texte[i] != ' ' && texte[i] != '\n') {
+            // Pour chaque caractère dans le texte on crée une cellule et on l'ajoute dans la sequence
+            suiv = nouvelleCellule();
+            suiv->command = texte[i];
+            suiv->suivant = NULL;
 
-        cel->suivant = suiv;
-        cel = cel->suivant;
+            cel->suivant = suiv;
+            cel = cel->suivant;
+        }
     }
 }
 

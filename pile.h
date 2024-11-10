@@ -35,6 +35,15 @@ void empiler(pile *p, val valeur);
 /* Dépile et renvoie l'element au sommet */
 val depiler(pile *p);
 
+/* Dépile et renvoie l'élément en fin de pile */
+val depiler_fin(pile *p);
+
+/* 
+ * Inversion de la pile
+ * a1,a2,...,an devient an,an-1,...,a1
+ */
+void inverser_pile (pile *l);
+
 /* Libère la mémoire allouée à chaque cellule de la pile, et à la pile elle même*/
 void liberer_pile(pile *p);
 
@@ -52,6 +61,9 @@ void rotation(pile *p, int n, int x);
 
 /* Execute un groupe de commandes */
 int exec_groupe_commandes(val *cmd1, val *cmd2, val valeur, bool debug);
+
+/* Affiche la valeur d'une cellule de la pile */
+void afficher_valeur_cellule(val valeur);
 
 /* Affiche les éléments de la pile */
 void afficher_pile(pile *p);

@@ -35,6 +35,8 @@ int interprete (sequence_t* seq, bool debug)
     cellule_t *cel;
     char commande;
     int ret;                // Utilisée pour les valeurs de retour
+    bool etat_z = true;     // Booléen utilisé pour la fonction mysterieuZe
+
 
     if (!silent_mode) {
         printf ("Programme:");
@@ -164,14 +166,29 @@ int interprete (sequence_t* seq, bool debug)
                 y = depiler(&p);
                 rotation(&p, y.v_int, x.v_int);
                 break;
+            case 'Z':
+                // On change d'etat à chaque appel de Z
+                etat_z = !etat_z;
+
+                if (!etat_z) {
+                    // Si false, on execute ? avec les éléments en fin de pile
+                    x = depiler_fin(&p);
+                    y = depiler_fin(&p);
+                    valeur = depiler_fin(&p);
+
+                    empiler(&p, valeur);
+                    empiler(&p, y);
+                    empiler(&p, x);
+                }
+                break;
             default:
                 if (isdigit(commande)) {
                     valeur.v_bool = 1;
                     valeur.v_int = commande-'0';
                     empiler(&p, valeur);
+                } else {
+                    if (!silent_mode) eprintf("Caractère inconnu: '%c'\n", commande);
                 }
-                if (!silent_mode)
-                    eprintf("Caractère inconnu: '%c'\n", commande);
                 break;
         }
         cel = cel->suivant;

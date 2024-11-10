@@ -30,6 +30,57 @@ val depiler(pile *p) {
 }
 
 
+/* Dépile et renvoie l'élément en fin de pile */
+val depiler_fin(pile *p) {
+    cellule_pile *cel;
+    cellule_pile *temp;
+    val valeur;
+
+    // Si la pile contient un seul élément
+    if (p->tete->suivant == NULL) {
+        valeur = p->tete->valeur;
+        free(p->tete);
+        p->tete = NULL;
+        return valeur;
+    }
+
+    // Parcourt la pile jusqu'à l'avant-dernier élément
+    cel = p->tete;
+    while (cel->suivant->suivant != NULL) {
+        cel = cel->suivant;
+    }
+
+    // Sauvegarde la valeur, libère la dernière cellule, et ajuste le pointeur
+    valeur = cel->suivant->valeur;
+    temp = cel->suivant;
+    cel->suivant = NULL;
+    free(temp);
+
+    return valeur;
+}
+
+
+/* 
+ * Inversion de la pile
+ * a1,a2,...,an devient an,an-1,...,a1
+ */
+void inverser_pile (pile *l) {
+    cellule_pile *precedent = NULL;
+    cellule_pile *courant = l->tete;
+    cellule_pile *suivant = NULL;
+
+    while (courant != NULL) {
+        suivant = courant->suivant;
+        courant->suivant = precedent;
+
+        precedent = courant;
+        courant = suivant;
+    }
+
+    l->tete = precedent;
+}
+
+
 /* Libère la mémoire allouée à chaque cellule de la pile, et à la pile elle même*/
 void liberer_pile(pile *p) {
     cellule_pile *cel = p->tete;
@@ -117,22 +168,32 @@ int exec_groupe_commandes(val *V, val *F, val valeur, bool debug) {
 }
 
 
+/* Affiche la valeur d'une cellule de la pile */
+void afficher_valeur_cellule(val valeur) {
+    if (silent_mode) return;
+
+    if (valeur.v_bool == 1) {
+        printf("%d\n", valeur.v_int);
+    }
+    else {
+        printf("{");
+        afficher(&valeur.groupe);
+        printf("}\n");
+    }
+}
+
+
 /* Affiche les éléments de la pile */
 void afficher_pile(pile *p) {
     if (silent_mode) return;
 
-    cellule_pile *cel = p->tete;
     val valeur;
+    cellule_pile *cel;
+
+    cel = p->tete;
     while (cel != NULL) {
         valeur = cel->valeur;
-        if (valeur.v_bool == 1) {
-            printf("%d\n", valeur.v_int);
-        }
-        else {
-            printf("{");
-            afficher(&valeur.groupe);
-            printf("}\n");
-        }
+        afficher_valeur_cellule(valeur);
         cel = cel->suivant;
     }
 }
